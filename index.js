@@ -55,10 +55,10 @@ app.post("/api/products", async (req, res) => {
 app.get("/api/products", async (req, res) => {
   try {
     const products = await Product.find().populate("category");
-    if (!products) {
+    if (products.length === 0) {
       return res.status(404).json({ error: "Products not found" });
     }
-    return res.status(200).json({ data: products });
+    return res.status(200).json({ data: { products } });
   } catch (error) {
     console.error("Error fetching data:", error);
     return res.status(500).json({ error: "Unable to fetch data" });
@@ -69,7 +69,7 @@ app.get("/api/products/:productId", async (req, res) => {
     const { productId } = req.params;
     const product = await Product.findById(productId);
     if (product) {
-      return res.status(200).json({ product });
+      return res.status(200).json({ data: { product } });
     }
     return res.status(404).json({ error: "Product not found" });
   } catch (error) {
@@ -97,10 +97,10 @@ app.post("/api/categories", async (req, res) => {
 app.get("/api/categories", async (req, res) => {
   try {
     const categories = await Category.find();
-    if (!categories) {
+    if (categories.length === 0) {
       return res.status(404).json({ error: "Categories not found" });
     }
-    return res.status(200).json({ categories });
+    return res.status(200).json({ data: { categories } });
   } catch (error) {
     console.error("Error fetching data:", error);
     return res.status(500).json({ error: "Unable to fetch data" });
